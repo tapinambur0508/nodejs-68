@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <form novalidate autocomplete="off" onsubmit="handleSubmit(event)">
+    <input type="file" name="image" />
+    <button type="submit">Upload</button>
+  </form>
+
+  <script>
+    fetch("http://localhost:8080/api/users/64ac44f6b82da1cea8300b50")
+      .then(response => response.json())
+      .then(data => {
+        const img = document.createElement("img");
+        img.src = `http://localhost:8080/avatar/${data.avatar}`;
+        img.width = 500;
+        document.body.appendChild(img);
+      });
+
+    function handleSubmit(event) {
+      event.preventDefault();
+
+      const file = event.target.image.files[0];
+
+      const formData = new FormData();
+
+      formData.append('image', file);
+
+      fetch("http://localhost:8080/api/users/64ac44f6b82da1cea8300b50/avatar", {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(() => window.location.reload());
+    }
+  </script>
+</body>
+
+</html>
